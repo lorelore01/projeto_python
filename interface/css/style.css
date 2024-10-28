@@ -1,4 +1,4 @@
-/* Reset básico */
+
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +6,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Corpo da página */
+
 body {
     background-color: #e9ecef;
     display: flex;
@@ -16,7 +16,7 @@ body {
     padding: 10px;
 }
 
-/* Container principal */
+
 .container {
     width: 90%;
     max-width: 400px;
@@ -26,14 +26,14 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Título */
+
 .container h1 {
     text-align: center;
     margin-bottom: 15px;
     color: #202522;
 }
 
-/* Navegação entre páginas */
+
 .nav {
     display: flex;
     justify-content: space-around;
@@ -46,7 +46,7 @@ body {
     font-weight: bold;
 }
 
-/* Inputs e botões */
+
 input, button {
     width: 100%;
     padding: 10px;
@@ -55,7 +55,7 @@ input, button {
     border-radius: 5px;
 }
 
-/* Botão de ação */
+
 button {
     background-color: #291972;
     color: white;
@@ -68,7 +68,7 @@ button:hover {
     background-color: #218838;
 }
 
-/* Botão de voltar */
+
 .back-button {
     text-decoration: none;
     color: #324620;
@@ -78,7 +78,7 @@ button:hover {
     text-align: left;
 }
 
-/* Estilo para lista de horários */
+
 .horarios label {
     display: block;
     margin: 10px 0;
