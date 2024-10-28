@@ -2,5 +2,4 @@
 1. alguem altera algum arquivo
 2. essa pessoa adiciona as alterações com 'git add'
 3. faz commit(cria uma nova "versão") com 'git commit'
-4. Dá push (envia) a versão nova para oo github com 'git push'
-
+4. dá push (envia) a versão nova para oo github com 'git push'
