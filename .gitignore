@@ -1,4 +1,4 @@
 # excluir as pastas de cache
 **/__pycache__
  
-
+.venv
