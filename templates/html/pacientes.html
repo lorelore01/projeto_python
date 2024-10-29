@@ -12,31 +12,31 @@
     <div class="container">
         <a href="{{ url_for('index') }}" class="back-button">← Voltar</a>
         <h1>Cadastro de Pacientes</h1>
-        <form>
+        <form id="form-cadastro">
             <label>Nome Completo:</label>
-            <input type="text"  nome="nome" placeholder="Digite o nome" required>
+            <input type="text"  name="nome" placeholder="Digite o nome" required>
 
             <label>Idade:</label>
-            <input type="number" min="0" placeholder="Digite a idade ">
+            <input type="number" name="idade" min="0" placeholder="Digite a idade ">
 
             <label>CPF:</label>
-            <input type="text" placeholder="000.000.000-00" required>
+            <input type="text" name="cpf" placeholder="000.000.000-00" required>
 
             <label>Convênio:</label>
-            <input type="text" placeholder="Ex: Unimed">
+            <input type="text" name="convenio" placeholder="Ex: Unimed">
 
             <label>Email:</label>
-            <input type="email"  placeholder="seuemail@gmail.com">
+            <input type="email" name="email" placeholder="seuemail@gmail.com">
 
-            <label>Telefone::</label>
-            <input type="text" placeholder="(00)0000-0000">
+            <label>Telefone:</label>
+            <input type="text" name="telefone" placeholder="(00)0000-0000">
 
             <label>Pagamento:</label>
-            <input type="text" placeholder="Ex: Cartâo">
+            <input type="text" name="forma-pagamento" placeholder="Ex: Cartâo">
 
             <button type="submit">Cadastrar Paciente</button>
         </form>
     </div>
 </body>
-
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </html>

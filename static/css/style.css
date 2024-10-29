@@ -88,3 +88,17 @@ button:hover {
 input[type="radio"] {
     margin-right: 10px;
 }
+
+.horarios > label {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 0.3em;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+}
+
+.horarios > label > input {
+    max-width: 4em;
+    -self: right;
+}
