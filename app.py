@@ -1,6 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def index():
@@ -34,6 +36,11 @@ def horario_medico4():
 def horario_medico5():
     return render_template('html/horario_medico5.html')
 
+@app.route("/api/cadastro", methods=["POST"])
+def cadastrar_paciente():
+    data = request.json
+    funcoes.criar_paciente(data)
+    return render_template("html/pacientes.html")
 
 if __name__ == '__main__':
     app.run(debug=True)

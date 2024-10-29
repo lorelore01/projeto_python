@@ -1,7 +1,6 @@
 import sqlite3
-from teste import teste
 
-connector = sqlite3.connect("consultorio.db")
+connector = sqlite3.connect("consultorio.db", check_same_thread=False)
 cursor = connector.cursor()
 
 cursor.execute("""PRAGMA foreign_keys = ON;""")
@@ -15,23 +14,18 @@ CREATE TABLE IF NOT EXISTS pacientes (
               idade INTEGER,
               email TEXT,
               telefone TEXT,
-              tipo_consulta TEXT,
               pagamento TEXT
 )
 """)
-
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS medicos (
                 id INTEGER PRIMARY KEY,
                 nome TEXT NOT NULL,
-                cpf TEXT NOT NULL,
-                idade INTEGER,
-                email TEXT,
-                telefone TEXT,
                 especialidade TEXT
+                horario TEXT                
 )
-""")  
+""")
 
 cursor.execute(""" 
 CREATE TABLE IF NOT EXISTS consultas (
