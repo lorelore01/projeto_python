@@ -4,7 +4,7 @@
 3. faz commit(cria uma nova "versão") com 'git commit'
 4. dá push (envia) a versão nova para oo github com 'git push'
 
-
+# ---> arrumar a criação do arquivo .db (tem que ser criado sempre no mesmo diretório)
 
 # como lidar com agendamento de consultas:
 > (opção onde Lorenzo usa Jinja)
