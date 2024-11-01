@@ -22,7 +22,7 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS medicos (
                 id INTEGER PRIMARY KEY,
                 nome TEXT NOT NULL,
-                especialidade TEXT
+                especialidade TEXT,
                 horario TEXT                
 )
 """)

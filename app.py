@@ -41,7 +41,13 @@ def horario_medico5():
 def cadastrar_paciente():
     data = request.json
     funcoes.criar_paciente(data)
+    #print(data)
     return render_template("html/pacientes.html")
 
+#@app.route("/api/pacientes",methods = ['GET'])
+#def recuperar_pacientes():
+    #pacientes = funcoes.recuperar_pacientes()
+    #print(pacientes)
+    #return pacientes
 if __name__ == '__main__':
     app.run(debug=True)
