@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro de Pacientes{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <a href="{{ url_for('core.index') }}" class="btn btn-secondary mb-3">← Voltar</a>
+        <h1 class="text-center mb-4">Cadastro de Pacientes</h1>
+        
+        <form method="POST" class="mx-auto" style="max-width: 600px;">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group mb-3">
+                {{ form.nome.label(class="form-label") }} 
+                {{ form.nome(class="form-control", placeholder="Digite o nome") }}
+                {% if form.nome.errors %}
+                    <div class="text-danger">{{ form.nome.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form.idade.label(class="form-label") }} 
+                {{ form.idade(class="form-control", placeholder="Digite a idade") }}
+                {% if form.idade.errors %}
+                    <div class="text-danger">{{ form.idade.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form.cpf.label(class="form-label") }} 
+                {{ form.cpf(class="form-control", placeholder="000.000.000-00") }}
+                {% if form.cpf.errors %}
+                    <div class="text-danger">{{ form.cpf.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form.convenio.label(class="form-label") }} 
+                {{ form.convenio(class="form-control", placeholder="Ex: Unimed") }}
+                {% if form.convenio.errors %}
+                    <div class="text-danger">{{ form.convenio.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form.email.label(class="form-label") }} 
+                {{ form.email(class="form-control", placeholder="seuemail@gmail.com") }}
+                {% if form.email.errors %}
+                    <div class="text-danger">{{ form.email.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form.pagamento.label(class="form-label") }} 
+                {{ form.pagamento(class="form-control", placeholder="Ex: Cartão") }}
+                {% if form.pagamento.errors %}
+                    <div class="text-danger">{{ form.pagamento.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form.password.label(class="form-label") }} 
+                {{ form.password(class="form-control", placeholder="Digite sua senha") }}
+                {% if form.password.errors %}
+                    <div class="text-danger">{{ form.password.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form.pass_confirm.label(class="form-label") }} 
+                {{ form.pass_confirm(class="form-control", placeholder="Confirme sua senha") }}
+                {% if form.pass_confirm.errors %}
+                    <div class="text-danger">{{ form.pass_confirm.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group text-center">
+                {{ form.submit(class="btn btn-primary", value="Cadastrar Paciente") }}
+            </div>
+        </form>
+    </div>
+{% endblock %}

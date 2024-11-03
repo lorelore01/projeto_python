@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Agendar Consulta com Dr(a). {{ medico.nome }}</h2>
+
+    <div class="card p-4 shadow">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="horario" class="form-label">Escolha um horário:</label>
+                <select name="horario" id="horario" class="form-select" required>
+                    <option value="" disabled selected>Selecione um horário</option> <!-- Placeholder -->
+                    {% for horario in horarios_disponiveis %}
+                        <option value="{{ horario }}" {% if horario in horarios_ocupados %}disabled{% endif %}>
+                            {{ horario }} {% if horario in horarios_ocupados %}(indisponível){% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição:</label>
+                <textarea name="descricao" id="descricao" class="form-control" placeholder="Insira a descrição do motivo da consulta" required></textarea> <!-- Placeholder -->
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Agendar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

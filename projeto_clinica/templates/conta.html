@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="mt-4 p-5 bg-primary text-white rounded">
+    <div align="center">
+        <h1>Bem vindo a página para {{current_user.nome}}</h1>
+    </div>
+
+</div>
+
+<div class="container">
+    <form method="POST">
+        {{form.hidden_tag()}}
+
+        {{form.email.label}} {{form.email}}
+
+        {{form.submit}}
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,5 +1,5 @@
 # projeto_python
-Projeto Python usando Flask, HTML, CSS e SQL
+Projeto Python usando Flask, HTML, CSS e SQL e Bootstrap
 
 ## Instalando e Rodando o Projeto
 

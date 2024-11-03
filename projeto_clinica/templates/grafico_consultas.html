@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Consultas por Semana{% endblock %}
+
+{% block content %}
+    <h1>Consultas por Semana</h1>
+    {% if contagem %}
+        <canvas id="consultasChart" style="height: 400px;"></canvas>
+    {% else %}
+        <p>Não há consultas registradas para esta semana.</p>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('consultasChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ datas | tojson }},
+                datasets: [{
+                    label: 'Número de Consultas',
+                    data: {{ contagem | tojson }},
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

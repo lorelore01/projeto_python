@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="p-5 bg-light rounded">
+        <h1 style="color:#517dc4">Minhas Consultas</h1>
+        {% if consultas %}
+            <ul class="list-group">
+                {% for consulta in consultas %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ consulta.data.strftime('%A %H:%M') }}</strong><br>
+                            Descrição: {{ consulta.descricao }}
+                        </div>
+                        <form action="{{ url_for('users.cancelar_consulta', consulta_id=consulta.id) }}" method="POST">
+                            <button type="submit" class="btn btn-danger">Cancelar</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-info mt-3" role="alert">
+                Você não tem consultas agendadas.
+            </div>
+        {% endif %}
+    </div>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Gerenciar Conta</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Se você deseja excluir sua conta, clique no botão abaixo. Esta ação não pode ser desfeita.</p>
+                <form action="{{ url_for('users.deletar_conta') }}" method="POST" onsubmit="return confirm('Você tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');">
+                    <button type="submit" class="btn btn-danger">Excluir Minha Conta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

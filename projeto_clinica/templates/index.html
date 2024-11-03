@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container d-flex flex-column justify-content-center align-items-center vh-100">
+    <div class="text-center">
+        <div class="mt-4 p-5 bg-primary text-white rounded">
+            <h1>Clínica Cuidado Integral</h1>
+        </div>
+        <div class="mt-4 p-5 bg-primary text-white rounded">
+            
+            <div class="container mt-4">
+                <h2>Marcar Horário</h2>
+                <div class="nav justify-content-center">
+                    <a class="btn btn-success" href="{{ url_for('users.acessar_medicos') }}">Médicos</a>
+                </div>
+            </div>
+
+          </div>    
+    </div>
+</div>
+
+{% endblock %}

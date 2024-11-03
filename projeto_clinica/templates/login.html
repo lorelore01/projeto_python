@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro de Pacientes{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="mt-4 p-5 bg-primary text-white rounded text-center">
+        <a href="{{ url_for('core.index') }}" class="back-button d-block mb-4" style="color:white;">← Voltar</a>
+        <h1>LOG IN</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }} 
+            <div class="form-group">
+                {{ form.email.label(class="form-label") }} 
+                {{ form.email(class="form-control", placeholder="seuemail@gmail.com") }}<br>
+            </div>
+            <div class="form-group">
+                {{ form.password.label(class="form-label") }} 
+                {{ form.password(class="form-control", placeholder="Digite sua senha") }}<br>
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-light", value="Entrar") }}
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
