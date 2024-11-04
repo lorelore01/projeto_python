@@ -43,14 +43,7 @@ class RegistrationForm(FlaskForm):
         except ValueError:
             raise ValidationError('Idade deve ser um número válido.')
         
-    def validate_email(self, field):
-        if Paciente.query.filter_by(email=field.data).first():
-            raise ValidationError('Seu e-mail já foi registrado!')
-    
-    def validate_cpf(self, field):
-        if Paciente.query.filter_by(cpf=field.data).first():
-            raise ValidationError('Este CPF já foi registrado!')
-    
+
 class UpdateUserForm(FlaskForm):
     
     email = StringField('Email', validators=[DataRequired(), Email()])
