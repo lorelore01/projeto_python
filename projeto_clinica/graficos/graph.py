@@ -51,6 +51,49 @@ def grafico_consultas():
     # Step 7: Render the template with the graph
     return render_template('grafico_consultas.html', image_data=image_data)
 
+def create_3d_bar_chart(counts_per_doctor):
+    # Create a new figure and axis for a 3D plot
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Define positions for the bars
+    x_pos = []
+    y_pos = []
+    z_pos = [0] * len(counts_per_doctor)
+
+    # Width and depth of each bar
+    dx = np.ones(len(counts_per_doctor))  # Width of bars
+    dy = np.ones(len(counts_per_doctor))  # Depth of bars
+
+    # Define the height of each bar (number of consultations per day)
+    dz = []
+
+    # Loop through each doctor and their consultation counts
+    for i, (doctor, counts) in enumerate(counts_per_doctor.items()):
+        for j, count in enumerate(counts):
+            x_pos.append(i)  # X position for the doctor
+            y_pos.append(j)  # Y position for the day of the week
+            dz.append(count)  # Height of the bar (number of consultations)
+
+    # Set labels for the x and y axes
+    ax.set_xlabel('Médicos')
+    ax.set_ylabel('Dia da Semana')
+    ax.set_zlabel('Número de Consultas')
+
+    # Set ticks on the x and y axes
+    ax.set_xticks(np.arange(len(counts_per_doctor)))
+    ax.set_yticks(np.arange(5))  # 5 days of the week (assuming data for Monday-Friday)
+
+    # Set the labels for the x and y axes
+    ax.set_xticklabels(list(counts_per_doctor.keys()))
+    ax.set_yticklabels(["Mon", "Tue", "Wed", "Thu", "Fri"])
+
+    # Create the 3D bar chart
+    ax.bar3d(x_pos, y_pos, z_pos, dx, dy, dz, color='skyblue', shade=True)
+
+    # Return the figure object
+    return fig
+
 @graficos_bp.route('/graphics')
 @login_required
 def graphics_page():

@@ -186,13 +186,18 @@ def parse_horario(horario_str):
     return horario_inicio, horario_fim
 
 @usuarios.route('/agendar/<int:medico_id>', methods=['GET', 'POST'])
+@login_required  # This decorator ensures the user must be logged in to access the route
 def agendar_consulta(medico_id):
     medico = Medico.query.get_or_404(medico_id)
 
     if request.method == 'POST':
+        # Check if the user is authenticated (just in case, even with the login_required decorator)
+        if not current_user.is_authenticated:
+            flash("You need to log in first!", "warning")
+            return redirect(url_for('auth.login'))  # Adjust to your login route
+
         horario_selecionado = request.form['horario']
         descricao = request.form['descricao']
-
         horario_inicio, horario_fim = parse_horario(horario_selecionado)
 
         nova_consulta = Consulta(
@@ -201,7 +206,7 @@ def agendar_consulta(medico_id):
             paciente_id=current_user.id,
             medico_id=medico_id
         )
-        
+
         # Verificar sobreposição de horários
         consultas_agendadas = Consulta.query.filter_by(medico_id=medico_id).all()
         for consulta in consultas_agendadas:
@@ -215,18 +220,19 @@ def agendar_consulta(medico_id):
         flash('Consulta agendada com sucesso! Horário disponível.', 'success')  # Alerta verde
         return redirect(url_for('users.confirmacao_agendamento'))
 
+    # Get all consultations for the selected doctor
     consultas_agendadas = Consulta.query.filter_by(medico_id=medico_id).all()
     horarios_disponiveis = []
     horarios_ocupados = []
 
     if medico.horarios:
-        horarios_trabalho = medico.horarios.split(",")  
+        horarios_trabalho = medico.horarios.split(",")  # Split working hours for the doctor
 
         for consulta in consultas_agendadas:
             horarios_ocupados.append(consulta.data.strftime('%A %H:%M - %H:%M'))
 
         for horario in horarios_trabalho:
-            horario_base = " ".join(horario.split()[:2])
+            horario_base = " ".join(horario.split()[:2])  # Formatting base working hours
             if horario_base not in horarios_ocupados:
                 horarios_disponiveis.append(horario)
 
