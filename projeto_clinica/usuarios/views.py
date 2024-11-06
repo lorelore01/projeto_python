@@ -6,49 +6,12 @@ from projeto_clinica.models import Paciente, Medico, Consulta
 from projeto_clinica.usuarios.forms import RegistrationForm, LoginForm, UpdateUserForm
 from datetime import datetime
 from datetime import timedelta
+from werkzeug.security import generate_password_hash
 from projeto_clinica.graph import plot_consultas, contar_consultas_por_semana, get_consultation_counts
 
 usuarios = Blueprint('users', __name__)
 
 from datetime import datetime, timedelta
-
-
-def parse_horario(horario_str):
-    if not horario_str:
-        raise ValueError("Horário selecionado não pode ser vazio.")
-    
-    partes = horario_str.split(' - ')
-    if len(partes) != 2:
-        raise ValueError("Formato de horário inválido. Use 'dia hora_inicio - hora_fim'.")
-    
-    hora_range = partes[1].strip()
-    dia_hora = partes[0].strip().split(' ', 1)
-
-    if len(dia_hora) != 2:
-        raise ValueError("Formato de dia inválido. Use 'dia hora_inicio'.")
-    
-    dia = dia_hora[0].strip()
-    hora_inicio = dia_hora[1].strip()
-    
-    dias_da_semana = {
-    "segunda": 0, "terça": 1, "terca": 1, "quarta": 2,
-    "quinta": 3, "sexta": 4, "sabado": 5, "domingo": 6,
-    "sabádo": 5  # Adicionando a variante com acento
-    }   
-
-    if dia.lower() not in dias_da_semana:
-        raise KeyError(f'Dia inválido: {dia}. Use um dia da semana válido.')
-    
-    hora_fim = hora_range.strip()
-    hoje = datetime.now().date()
-    dia_atual = hoje.weekday()
-    dias_ate_dia = (dias_da_semana[dia.lower()] - dia_atual) % 7
-    data_horario = hoje + timedelta(days=dias_ate_dia)
-    
-    horario_inicio = datetime.strptime(f"{data_horario} {hora_inicio}", "%Y-%m-%d %H:%M")
-    horario_fim = datetime.strptime(f"{data_horario} {hora_fim}", "%Y-%m-%d %H:%M")
-    
-    return horario_inicio, horario_fim
 
 
 @usuarios.route('/login', methods=['GET', 'POST'])
@@ -77,25 +40,27 @@ def login():
 
 @usuarios.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
-    form = RegistrationForm()  # Instantiate the form
+    form = RegistrationForm()  
     
-    # Handle form submission
     if form.validate_on_submit():
-        # Process the form data
-        # For example, save the new user to the database
-        novo_paciente = Paciente(nome=form.nome.data,
-                                 idade=form.idade.data,
-                                 cpf=form.cpf.data,
-                                 convenio=form.convenio.data,
-                                 email=form.email.data,
-                                 pagamento=form.pagamento.data,
-                                 senha=form.password.data)
+        # The hashed password is handled in the __init__ method
+        novo_paciente = Paciente(
+            nome=form.nome.data,
+            idade=form.idade.data,
+            cpf=form.cpf.data,
+            email=form.email.data,
+            convenio=form.convenio.data,
+            pagamento=form.pagamento.data,
+            senha=form.password.data  # Just pass the plain password
+        )
+        
         db.session.add(novo_paciente)
         db.session.commit()
+        
         flash('Cadastro realizado com sucesso!', 'success')
-        return redirect(url_for('core.index'))
+        
+        return redirect(url_for('core.index'))  # Adjust the redirect if necessary
     
-    # Pass the form to the template
     return render_template('cadastro.html', form=form)
 
 
@@ -105,14 +70,25 @@ def conta():
     form = UpdateUserForm()
 
     if request.method == 'GET':
+        # Pre-fill form fields with the current user's data
         form.email.data = current_user.email
-        form.nome.data = current_user.nome  
+        form.nome.data = current_user.nome
 
     if form.validate_on_submit():
-    
+        # Update the user's email and nome if validations pass
         current_user.email = form.email.data
+        current_user.nome = form.nome.data
+        
+        # Update password if the user provided a new one
+        if form.nova_senha.data:
+            current_user.password_hash = generate_password_hash(form.nova_senha.data)
 
+        # Commit changes to the database
         db.session.commit()
+
+        # Refresh the user session to apply updates immediately
+        login_user(current_user)
+
         flash('Informações atualizadas com sucesso!', 'success')
         return redirect(url_for('users.conta'))
 
@@ -171,8 +147,45 @@ def cancelar_consulta(consulta_id):
     return redirect(url_for('users.pagina_usuario'))
 
 
+
+def parse_horario(horario_str):
+    if not horario_str:
+        raise ValueError("Horário selecionado não pode ser vazio.")
+    
+    partes = horario_str.split(' - ')
+    if len(partes) != 2:
+        raise ValueError("Formato de horário inválido. Use 'dia hora_inicio - hora_fim'.")
+    
+    hora_range = partes[1].strip()
+    dia_hora = partes[0].strip().split(' ', 1)
+
+    if len(dia_hora) != 2:
+        raise ValueError("Formato de dia inválido. Use 'dia hora_inicio'.")
+    
+    dia = dia_hora[0].strip()
+    hora_inicio = dia_hora[1].strip()
+    
+    dias_da_semana = {
+    "segunda": 0, "terça": 1, "terca": 1, "quarta": 2,
+    "quinta": 3, "sexta": 4, "sabado": 5, "domingo": 6,
+    "sabádo": 5  # Adicionando a variante com acento
+    }   
+
+    if dia.lower() not in dias_da_semana:
+        raise KeyError(f'Dia inválido: {dia}. Use um dia da semana válido.')
+    
+    hora_fim = hora_range.strip()
+    hoje = datetime.now().date()
+    dia_atual = hoje.weekday()
+    dias_ate_dia = (dias_da_semana[dia.lower()] - dia_atual) % 7
+    data_horario = hoje + timedelta(days=dias_ate_dia)
+    
+    horario_inicio = datetime.strptime(f"{data_horario} {hora_inicio}", "%Y-%m-%d %H:%M")
+    horario_fim = datetime.strptime(f"{data_horario} {hora_fim}", "%Y-%m-%d %H:%M")
+    
+    return horario_inicio, horario_fim
+
 @usuarios.route('/agendar/<int:medico_id>', methods=['GET', 'POST'])
-@login_required
 def agendar_consulta(medico_id):
     medico = Medico.query.get_or_404(medico_id)
 
@@ -226,6 +239,8 @@ def agendar_consulta(medico_id):
         horarios_disponiveis=horarios_disponiveis,
         horarios_ocupados=horarios_ocupados
     )
+    
+    
 
 @usuarios.route('/confirmacao_agendamento')
 @login_required

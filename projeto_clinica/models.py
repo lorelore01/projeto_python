@@ -11,34 +11,35 @@ def load_user(user_id):
     return Paciente.query.get(user_id)
 
 class Paciente(db.Model, UserMixin):
-    
     __tablename__ = 'pacientes'
     
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(64), index=True)
     idade = db.Column(db.String(3))
-    cpf = db.Column(db.String(11), unique = True, index = True)
-    email = db.Column(db.String(64), unique = True, index = True)
+    cpf = db.Column(db.String(11), unique=True, index=True)
+    email = db.Column(db.String(64), unique=True, index=True)
     pagamento = db.Column(db.String(64))
     password_hash = db.Column(db.String(128))
+    convenio = db.Column(db.String(64))
     
+    # Define relationships
     medico = db.relationship("Medico", back_populates="paciente", uselist=False)
     consultas = db.relationship("Consulta", back_populates="paciente")
     
-    def __init__(self, nome, idade, cpf, convenio, email, pagamento, senha):
+    def __init__(self, nome, idade, cpf, email, convenio, pagamento, senha):
         self.nome = nome
         self.idade = idade
         self.cpf = cpf
-        self.convenio = convenio
         self.email = email
         self.pagamento = pagamento
-        self.password_hash = generate_password_hash(senha)
+        self.convenio = convenio
+        self.password_hash = generate_password_hash(senha)  # Handle password hash here
     
     def check_password(self, senha):
         return check_password_hash(self.password_hash, senha)
     
     def __repr__(self):
-        return f"Nome: {self.nome}"
+        return f"Paciente {self.nome}"
     
     
 class Medico(db.Model):
@@ -49,6 +50,7 @@ class Medico(db.Model):
     nome = db.Column(db.String(64), nullable=False)
     especialidade = db.Column(db.String(64))
     horarios = db.Column(db.String(128))
+    email = db.Column(db.String(120), nullable = True)
  
 
     # Chave estrangeira para um relacionamento um-para-um com Paciente
@@ -91,3 +93,19 @@ class Consulta(db.Model):
     
     def __repr__(self):
         return f"Consulta: {self.descricao}"
+
+    # Helper method to extract day of the week (0 = Monday, 6 = Sunday)
+    def get_dia_da_semana(self):
+        return self.data.weekday()  # 0 = Monday, 6 = Sunday
+    
+    # Method to format the date for graph usage
+    def get_formatted_data(self):
+        return self.data.strftime('%a %H:%M')  # Example: 'Mon 14:30'
+
+    # Optional: Method to get the doctor's name
+    def get_medico_name(self):
+        return self.medico.nome if self.medico else 'No doctor assigned'
+
+    # Optional: Method to get the patient's name
+    def get_paciente_name(self):
+        return self.paciente.nome if self.paciente else 'No patient assigned'

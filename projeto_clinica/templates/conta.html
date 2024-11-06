@@ -3,20 +3,66 @@
 
 <div class="mt-4 p-5 bg-primary text-white rounded">
     <div align="center">
-        <h1>Bem vindo a página para {{current_user.nome}}</h1>
+        <h1>Bem-vindo à página de atualização para {{ current_user.nome }}</h1>
     </div>
-
 </div>
 
-<div class="container">
+<div class="container mt-4">
     <form method="POST">
-        {{form.hidden_tag()}}
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            Novo {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            {% if form.email.errors %}
+                <div class="text-danger mt-1">
+                    {% for error in form.email.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-        {{form.email.label}} {{form.email}}
+        <div class="form-group">
+            Novo {{ form.nome.label(class="form-label") }}
+            {{ form.nome(class="form-control") }}
+            {% if form.nome.errors %}
+                <div class="text-danger mt-1">
+                    {% for error in form.nome.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-        {{form.submit}}
+        <div class="form-group">
+            {{ form.nova_senha.label(class="form-label") }}
+            {{ form.nova_senha(class="form-control") }}
+            {% if form.nova_senha.errors %}
+                <div class="text-danger mt-1">
+                    {% for error in form.nova_senha.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.confirmar_senha.label(class="form-label") }}
+            {{ form.confirmar_senha(class="form-control") }}
+            {% if form.confirmar_senha.errors %}
+                <div class="text-danger mt-1">
+                    {% for error in form.confirmar_senha.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group mt-3">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
     </form>
-
 </div>
 
 {% endblock %}

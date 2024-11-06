@@ -36,10 +36,10 @@ login_manager.login_view = 'users.login'
 from projeto_clinica.core.views import core
 from projeto_clinica.usuarios.views import usuarios
 from projeto_clinica.error_pages.handlers import error_pages
-
-
+from projeto_clinica.graficos.graph import graficos_bp
 #############################
 
 app.register_blueprint(core)
 app.register_blueprint(usuarios)
 app.register_blueprint(error_pages)
+app.register_blueprint(graficos_bp)

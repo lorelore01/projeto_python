@@ -4,6 +4,7 @@
 <div class="container mt-4">
     <div class="p-5 bg-light rounded">
         <h1 style="color:#517dc4">Minhas Consultas</h1>
+        
         {% if consultas %}
             <ul class="list-group">
                 {% for consulta in consultas %}
@@ -24,19 +25,24 @@
             </div>
         {% endif %}
     </div>
+
     <div class="container mt-4">
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0">Gerenciar Conta</h5>
             </div>
             <div class="card-body">
-                <p class="card-text">Se você deseja excluir sua conta, clique no botão abaixo. Esta ação não pode ser desfeita.</p>
-                <form action="{{ url_for('users.deletar_conta') }}" method="POST" onsubmit="return confirm('Você tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');">
-                    <button type="submit" class="btn btn-danger">Excluir Minha Conta</button>
-                </form>
+                <p class="card-text">Use as opções abaixo para gerenciar sua conta.</p>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('users.conta') }}" class="btn btn-primary">Atualizar Conta</a>
+                    
+                    <form action="{{ url_for('users.deletar_conta') }}" method="POST" onsubmit="return confirm('Você tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');">
+                        <button type="submit" class="btn btn-danger">Excluir Minha Conta</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    
 </div>
 {% endblock %}

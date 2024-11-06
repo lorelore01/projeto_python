@@ -14,7 +14,11 @@
                 {{ form.nome.label(class="form-label") }} 
                 {{ form.nome(class="form-control", placeholder="Digite o nome") }}
                 {% if form.nome.errors %}
-                    <div class="text-danger">{{ form.nome.errors[0] }}</div>
+                    <div class="text-danger mt-1">
+                        {% for error in form.nome.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
 
@@ -22,7 +26,11 @@
                 {{ form.idade.label(class="form-label") }} 
                 {{ form.idade(class="form-control", placeholder="Digite a idade") }}
                 {% if form.idade.errors %}
-                    <div class="text-danger">{{ form.idade.errors[0] }}</div>
+                    <div class="text-danger mt-1">
+                        {% for error in form.idade.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
 
@@ -30,15 +38,23 @@
                 {{ form.cpf.label(class="form-label") }} 
                 {{ form.cpf(class="form-control", placeholder="000.000.000-00") }}
                 {% if form.cpf.errors %}
-                    <div class="text-danger">{{ form.cpf.errors[0] }}</div>
+                    <div class="text-danger mt-1">
+                        {% for error in form.cpf.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
 
             <div class="form-group mb-3">
                 {{ form.convenio.label(class="form-label") }} 
-                {{ form.convenio(class="form-control", placeholder="Ex: Unimed") }}
+                {{ form.convenio(class="form-control") }}
                 {% if form.convenio.errors %}
-                    <div class="text-danger">{{ form.convenio.errors[0] }}</div>
+                    <div class="text-danger mt-1">
+                        {% for error in form.convenio.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
 
@@ -46,15 +62,23 @@
                 {{ form.email.label(class="form-label") }} 
                 {{ form.email(class="form-control", placeholder="seuemail@gmail.com") }}
                 {% if form.email.errors %}
-                    <div class="text-danger">{{ form.email.errors[0] }}</div>
+                    <div class="text-danger mt-1">
+                        {% for error in form.email.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
 
             <div class="form-group mb-3">
                 {{ form.pagamento.label(class="form-label") }} 
-                {{ form.pagamento(class="form-control", placeholder="Ex: Cartão") }}
+                {{ form.pagamento(class="form-control") }}
                 {% if form.pagamento.errors %}
-                    <div class="text-danger">{{ form.pagamento.errors[0] }}</div>
+                    <div class="text-danger mt-1">
+                        {% for error in form.pagamento.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
 
@@ -62,7 +86,11 @@
                 {{ form.password.label(class="form-label") }} 
                 {{ form.password(class="form-control", placeholder="Digite sua senha") }}
                 {% if form.password.errors %}
-                    <div class="text-danger">{{ form.password.errors[0] }}</div>
+                    <div class="text-danger mt-1">
+                        {% for error in form.password.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
 
@@ -70,7 +98,11 @@
                 {{ form.pass_confirm.label(class="form-label") }} 
                 {{ form.pass_confirm(class="form-control", placeholder="Confirme sua senha") }}
                 {% if form.pass_confirm.errors %}
-                    <div class="text-danger">{{ form.pass_confirm.errors[0] }}</div>
+                    <div class="text-danger mt-1">
+                        {% for error in form.pass_confirm.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
 
