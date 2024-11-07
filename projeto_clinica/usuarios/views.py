@@ -8,6 +8,8 @@ from datetime import datetime
 from datetime import timedelta
 from werkzeug.security import generate_password_hash
 from projeto_clinica.graph import plot_consultas, contar_consultas_por_semana, get_consultation_counts
+from email.message import EmailMessage
+import smtplib
 
 usuarios = Blueprint('users', __name__)
 
@@ -63,6 +65,39 @@ def cadastro():
     
     return render_template('cadastro.html', form=form)
 
+
+def send_email(user_email, nome_paciente, data_consulta, horario_consulta, nome_medico):
+    email_body = f"""\
+    <p> Prezado(a) {nome_paciente}, </p>
+    <p> Estamos enviando este e-mail para confirmar sua consulta agendada. </p>
+    <p> <strong>Detalhes da Consulta:</strong> </p>
+    <p> Data: {data_consulta} </p>
+    <p> Horário: {horario_consulta} </p>
+    <p> Médico: Dr(a). {nome_medico} </p>
+    <p> Atenciosamente, </p>
+    <p> Clínica UEPB </p>
+    """
+
+    msg = EmailMessage()
+    msg["Subject"] = "Consulta Agendada"  # Título do e-mail
+    msg["From"] = "t3st.dummy2077@gmail.com"  # Conta que manda o e-mail
+    msg["To"] = user_email  # Enviar para o e-mail do usuário
+    password = "anfmvkkdzojdymcf"  # Senha da conta
+
+    msg.set_content(email_body, subtype='html')  # Define o corpo do e-mail como HTML
+
+    # Configuração do servidor SMTP
+    smt = smtplib.SMTP("smtp.gmail.com", 587)
+    smt.starttls()  # Inicia a conexão
+    try:
+        smt.login(msg["From"], password)  # Login no servidor SMTP
+        smt.sendmail(msg["From"], msg["To"], msg.as_string())  # Envio do e-mail
+        print("E-mail enviado com sucesso!")
+
+    except Exception as e:
+        print(f"Erro ao enviar e-mail: {e}")  # Trata as exceções
+    finally:
+        smt.quit()  # Encerra a conexão com o servidor SMTP
 
 @usuarios.route('/conta', methods=['GET', 'POST'])
 @login_required
@@ -238,6 +273,11 @@ def agendar_consulta(medico_id):
 
         db.session.add(nova_consulta)
         db.session.commit()
+
+        # Envia e-mail para o usuário com os detalhes da consulta
+        send_email(current_user.email, current_user.nome, horario_inicio.strftime('%d/%m/%Y'), 
+                   horario_inicio.strftime('%H:%M'), medico.nome)
+
         flash(f'Consulta agendada com sucesso! Preço final: R$ {preco_final:.2f}', 'success')
         return redirect(url_for('users.confirmacao_agendamento'))
 
@@ -264,7 +304,6 @@ def agendar_consulta(medico_id):
         preco_final=preco_final,  # Passa preco_final para o template
         desconto_aplicado=desconto_aplicado  # Passa desconto_aplicado para o template
     )
-
     
 
 @usuarios.route('/confirmacao_agendamento')
