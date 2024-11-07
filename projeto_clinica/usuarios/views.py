@@ -105,23 +105,27 @@ def conta():
     form = UpdateUserForm()
 
     if request.method == 'GET':
-        # Pre-fill form fields with the current user's data
+        # Preencher os campos do formulário com os dados atuais do usuário
         form.email.data = current_user.email
         form.nome.data = current_user.nome
+        form.pagamento.data = current_user.pagamento  # Definir o valor atual do método de pagamento
+        form.convenio.data = current_user.convenio  # Definir o valor atual do convênio
 
     if form.validate_on_submit():
-        # Update the user's email and nome if validations pass
+        # Atualizar os dados do usuário
         current_user.email = form.email.data
         current_user.nome = form.nome.data
+        current_user.pagamento = form.pagamento.data  # Atualizar o método de pagamento
+        current_user.convenio = form.convenio.data  # Atualizar o status de convênio
         
-        # Update password if the user provided a new one
+        # Atualizar a senha se o usuário forneceu uma nova
         if form.nova_senha.data:
             current_user.password_hash = generate_password_hash(form.nova_senha.data)
 
-        # Commit changes to the database
+        # Confirmar as mudanças no banco de dados
         db.session.commit()
 
-        # Refresh the user session to apply updates immediately
+        # Atualizar a sessão do usuário para aplicar as alterações imediatamente
         login_user(current_user)
 
         flash('Informações atualizadas com sucesso!', 'success')

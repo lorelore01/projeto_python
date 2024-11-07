@@ -70,21 +70,23 @@ class UpdateUserForm(FlaskForm):
         DataRequired(),
         EqualTo('nova_senha', message="As senhas devem coincidir")
     ])
+    pagamento = SelectField('Método de pagamento', choices=[('crt', 'Cartão'), ('avst', 'À vista')])
+    convenio = SelectField('Convênio', choices=[('y', 'Sim'), ('n', 'Não')])
     submit = SubmitField('Atualizar')
 
     def validate_nome(self, field):
-        # Check if the name contains only letters and spaces
+        # Verificar se o nome contém apenas letras e espaços
         if not all(char.isalpha() or char.isspace() for char in field.data):
             raise ValidationError("O nome deve conter apenas letras e espaços.")
 
-        # Check if name already exists in the database (excluding current user)
+        # Verificar se o nome já foi registrado no banco de dados (exceto para o usuário atual)
         if field.data != current_user.nome:
             existing_nome = Paciente.query.filter_by(nome=field.data).first()
             if existing_nome:
                 raise ValidationError('Este nome já foi registrado por outro usuário.')
 
     def validate_email(self, field):
-        # Check if email already exists in the database (excluding current user)
+        # Verificar se o email já foi registrado no banco de dados (exceto para o usuário atual)
         if field.data != current_user.email:
             existing_email = Paciente.query.filter_by(email=field.data).first()
             if existing_email:
