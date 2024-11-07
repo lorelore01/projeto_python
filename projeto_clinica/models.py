@@ -76,6 +76,7 @@ class Consulta(db.Model):
     data_hora = db.Column(db.DateTime)
     data = db.Column(db.DateTime, nullable=False,  default=datetime.utcnow)
     descricao = db.Column(db.Text)
+    dia_da_semana = db.Column(db.String(10))  # New column to store the day of the week
 
     # Foreign keys
     paciente_id = db.Column(db.Integer, db.ForeignKey('pacientes.id'))
@@ -85,11 +86,12 @@ class Consulta(db.Model):
     paciente = db.relationship("Paciente", back_populates="consultas", lazy=True)
     medico = db.relationship("Medico", back_populates="consultas", lazy=True)
     
-    def __init__(self, data, descricao, paciente_id, medico_id):
+    def __init__(self, data, descricao, paciente_id, medico_id, dia_da_semana):
         self.data = data
         self.descricao = descricao
         self.paciente_id = paciente_id  # Set paciente_id
         self.medico_id = medico_id  # Set medico_id
+        self.dia_da_semana = dia_da_semana  
     
     def __repr__(self):
         return f"Consulta: {self.descricao}"

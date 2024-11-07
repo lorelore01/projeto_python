@@ -8,15 +8,15 @@
     </div>
 
     <script>
-        // Assuming you have data for your chart (you can replace this with dynamic data if needed)
+        // Assuming 'contagem' is passed dynamically from Flask
         var ctx = document.getElementById('consultasChart').getContext('2d');
         var consultasChart = new Chart(ctx, {
-            type: 'bar', // Change to 'line', 'pie', or any other type you need
+            type: 'bar',
             data: {
-                labels: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'], // Days of the week
+                labels: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
                 datasets: [{
                     label: 'Consultas',
-                    data: [12, 19, 3, 5, 2, 6, 7], // Replace this with dynamic data if necessary
+                    data: {{ contagem | tojson }},
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1

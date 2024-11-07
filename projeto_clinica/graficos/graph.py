@@ -94,6 +94,33 @@ def create_3d_bar_chart(counts_per_doctor):
     # Return the figure object
     return fig
 
+def prepare_data_for_plot():
+    results = get_consultation_counts()
+
+    # Initialize a dictionary to hold counts for each doctor
+    doctor_counts = {
+        "Dra. Marina": [0] * 7,  # There are 7 days in a week
+        "Dr. Ricardo": [0] * 7,
+        "Dra. Ana": [0] * 7,
+        "Dr. Jonatas": [0] * 7,
+        "Dra. Leandra": [0] * 7,
+    }
+
+    # Map the weekday numbers to indices (0=Sunday, 1=Monday, ..., 6=Saturday)
+    weekday_index = {0: 6, 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5}
+
+    # Populate the counts based on query results
+    for nome, dia_da_semana, total in results:
+        index = weekday_index[int(dia_da_semana)]
+        doctor_counts[nome][index] += total
+
+    # Flatten the counts into a list for plotting
+    counts_for_plot = []
+    for doctor in doctor_counts.values():
+        counts_for_plot.extend(doctor)
+
+    return counts_for_plot
+
 @graficos_bp.route('/graphics')
 @login_required
 def graphics_page():
@@ -102,7 +129,7 @@ def graphics_page():
 
     # Step 2: Prepare the data for the graph
     datas = []
-    contagem = []
+    contagem = prepare_data_for_plot()
     
     doctor_names = ["Dra. Marina", "Dr. Ricardo", "Dra. Ana", "Dr. Jonatas", "Dra. Leandra"]
     
@@ -148,3 +175,4 @@ def get_consultation_counts():
         result.append((medico, dia_da_semana, count))
 
     return result
+

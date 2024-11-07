@@ -14,8 +14,9 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
+
 def get_consultation_counts():
-    # Current week start and end dates
+    # Get current week start and end dates
     today = datetime.now()
     start_of_week = today - timedelta(days=today.weekday())
     end_of_week = start_of_week + timedelta(days=6)

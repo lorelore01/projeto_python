@@ -200,11 +200,15 @@ def agendar_consulta(medico_id):
         descricao = request.form['descricao']
         horario_inicio, horario_fim = parse_horario(horario_selecionado)
 
+        # Get the day of the week for the consultation (0 = Monday, 6 = Sunday)
+        dia_da_semana = horario_inicio.strftime('%A')  # This will return the full day name (e.g., 'Monday')
+
         nova_consulta = Consulta(
             data=horario_inicio,
             descricao=descricao,
             paciente_id=current_user.id,
-            medico_id=medico_id
+            medico_id=medico_id,
+            dia_da_semana=dia_da_semana  # Store the day of the week
         )
 
         # Verificar sobreposição de horários
