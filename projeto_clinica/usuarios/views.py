@@ -110,8 +110,20 @@ def user_posts(usuario):
 @usuarios.route('/pagina_usuario')
 @login_required
 def pagina_usuario():
+    usuario = Paciente.query.get(current_user.id)
     consultas_agendadas = Consulta.query.filter_by(paciente_id=current_user.id).all()
-    return render_template('pagina_usuario.html', consultas=consultas_agendadas)
+    
+    # Converter "y"/"n" em "Sim"/"Não" para o convênio
+    convenio_formatado = "Sim" if usuario.convenio == "y" else "Não"
+
+    # Passa as informações de pagamento e convênio para o template
+    return render_template(
+        'pagina_usuario.html', 
+        consultas=consultas_agendadas,
+        usuario=usuario,
+        convenio_formatado=convenio_formatado,
+        metodo_pagamento=usuario.pagamento
+    )
 
 @usuarios.route('/deletar_conta', methods=['POST'])
 @login_required
@@ -186,32 +198,28 @@ def parse_horario(horario_str):
     return horario_inicio, horario_fim
 
 @usuarios.route('/agendar/<int:medico_id>', methods=['GET', 'POST'])
-@login_required  # This decorator ensures the user must be logged in to access the route
+@login_required
 def agendar_consulta(medico_id):
     medico = Medico.query.get_or_404(medico_id)
+    preco_base = 200.00
+    preco_final = preco_base  # Define preco_final também no método GET
+    desconto_aplicado = 0
+
+    # Aplica descontos de forma composta
+    if current_user.pagamento == 'avst':  # À vista
+        preco_final *= 0.95  # Aplica desconto de 5%
+        desconto_aplicado += 5  # Desconto de 5% por pagamento à vista
+    if current_user.convenio == 'y':  # Com convênio
+        preco_final *= 0.85  # Aplica desconto adicional de 15% sobre o valor com desconto
+        desconto_aplicado += 15  # Desconto de 15% por convênio
 
     if request.method == 'POST':
-        # Check if the user is authenticated (just in case, even with the login_required decorator)
-        if not current_user.is_authenticated:
-            flash("You need to log in first!", "warning")
-            return redirect(url_for('auth.login'))  # Adjust to your login route
-
         horario_selecionado = request.form['horario']
         descricao = request.form['descricao']
         horario_inicio, horario_fim = parse_horario(horario_selecionado)
+        dia_da_semana = horario_inicio.strftime('%A')
 
-        # Get the day of the week for the consultation (0 = Monday, 6 = Sunday)
-        dia_da_semana = horario_inicio.strftime('%A')  # This will return the full day name (e.g., 'Monday')
-
-        nova_consulta = Consulta(
-            data=horario_inicio,
-            descricao=descricao,
-            paciente_id=current_user.id,
-            medico_id=medico_id,
-            dia_da_semana=dia_da_semana  # Store the day of the week
-        )
-
-        # Verificar sobreposição de horários
+        # Verificação de sobreposição de horários
         consultas_agendadas = Consulta.query.filter_by(medico_id=medico_id).all()
         for consulta in consultas_agendadas:
             if (horario_inicio < consulta.data + timedelta(hours=1) and
@@ -219,37 +227,44 @@ def agendar_consulta(medico_id):
                 flash('Esse horário já está ocupado. Por favor, escolha outro.', 'danger')
                 return redirect(url_for('users.agendar_consulta', medico_id=medico_id))
 
+        nova_consulta = Consulta(
+            data=horario_inicio,
+            descricao=descricao,
+            paciente_id=current_user.id,
+            medico_id=medico_id,
+            dia_da_semana=dia_da_semana,
+            preco=preco_final
+        )
+
         db.session.add(nova_consulta)
         db.session.commit()
-        flash('Consulta agendada com sucesso! Horário disponível.', 'success')  # Alerta verde
+        flash(f'Consulta agendada com sucesso! Preço final: R$ {preco_final:.2f}', 'success')
         return redirect(url_for('users.confirmacao_agendamento'))
 
-    # Get all consultations for the selected doctor
+    # Configura horários disponíveis e ocupados
     consultas_agendadas = Consulta.query.filter_by(medico_id=medico_id).all()
     horarios_disponiveis = []
     horarios_ocupados = []
 
     if medico.horarios:
-        horarios_trabalho = medico.horarios.split(",")  # Split working hours for the doctor
-
+        horarios_trabalho = medico.horarios.split(",")
         for consulta in consultas_agendadas:
             horarios_ocupados.append(consulta.data.strftime('%A %H:%M - %H:%M'))
-
         for horario in horarios_trabalho:
-            horario_base = " ".join(horario.split()[:2])  # Formatting base working hours
+            horario_base = " ".join(horario.split()[:2])
             if horario_base not in horarios_ocupados:
                 horarios_disponiveis.append(horario)
-
-    print("Horários Disponíveis:", horarios_disponiveis)
-    print("Horários Ocupados:", horarios_ocupados)
 
     return render_template(
         'consulta_agendamento.html',
         medico=medico,
         horarios_disponiveis=horarios_disponiveis,
-        horarios_ocupados=horarios_ocupados
+        horarios_ocupados=horarios_ocupados,
+        preco_base=preco_base,  # Passa preco_base para o template
+        preco_final=preco_final,  # Passa preco_final para o template
+        desconto_aplicado=desconto_aplicado  # Passa desconto_aplicado para o template
     )
-    
+
     
 
 @usuarios.route('/confirmacao_agendamento')

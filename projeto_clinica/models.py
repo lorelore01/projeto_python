@@ -77,6 +77,7 @@ class Consulta(db.Model):
     data = db.Column(db.DateTime, nullable=False,  default=datetime.utcnow)
     descricao = db.Column(db.Text)
     dia_da_semana = db.Column(db.String(10))  # New column to store the day of the week
+    preco = db.Column(db.Float)  # Adicionando o campo 'preco'
 
     # Foreign keys
     paciente_id = db.Column(db.Integer, db.ForeignKey('pacientes.id'))
@@ -86,15 +87,16 @@ class Consulta(db.Model):
     paciente = db.relationship("Paciente", back_populates="consultas", lazy=True)
     medico = db.relationship("Medico", back_populates="consultas", lazy=True)
     
-    def __init__(self, data, descricao, paciente_id, medico_id, dia_da_semana):
+    def __init__(self, data, descricao, paciente_id, medico_id, dia_da_semana, preco=None):
         self.data = data
         self.descricao = descricao
         self.paciente_id = paciente_id  # Set paciente_id
         self.medico_id = medico_id  # Set medico_id
         self.dia_da_semana = dia_da_semana  
+        self.preco = preco  # Inicializando o preço
     
     def __repr__(self):
-        return f"Consulta: {self.descricao}"
+        return f"Consulta: {self.descricao}, Preço: {self.preco}"
 
     # Helper method to extract day of the week (0 = Monday, 6 = Sunday)
     def get_dia_da_semana(self):
@@ -111,3 +113,9 @@ class Consulta(db.Model):
     # Optional: Method to get the patient's name
     def get_paciente_name(self):
         return self.paciente.nome if self.paciente else 'No patient assigned'
+    
+    def get_dia_da_semana(self):
+        return self.data_hora.strftime('%A')  # Returns full weekday name, e.g., 'Monday'
+
+    def get_dia_da_semana_number(self):
+        return self.data_hora.weekday()  # 0=Monday, 6=Sunday

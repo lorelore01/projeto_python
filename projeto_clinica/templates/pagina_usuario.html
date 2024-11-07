@@ -3,8 +3,24 @@
 {% block content %}
 <div class="container mt-4">
     <div class="p-5 bg-light rounded">
-        <h1 style="color:#517dc4">Minhas Consultas</h1>
+        <h1 style="color:#517dc4">Informações do Usuário</h1>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Nome:</strong> {{ usuario.nome }}</li>
+            <li class="list-group-item"><strong>Convênio:</strong> {{ 'Sim' if usuario.convenio == 'y' else 'Não' }}</li>
+            <li class="list-group-item">
+                <strong>Método de pagamento:</strong> 
+                {% if usuario.pagamento == 'crt' %}
+                    Cartão
+                {% elif usuario.pagamento == 'avst' %}
+                    À vista
+                {% else %}
+                    Não especificado
+                {% endif %}
+            </li>
+            <li class="list-group-item"><strong>Email:</strong> {{ usuario.email }}</li>
+        </ul>
         
+        <h2 style="color:#517dc4" class="mt-4">Minhas Consultas</h2>
         {% if consultas %}
             <ul class="list-group">
                 {% for consulta in consultas %}
@@ -33,10 +49,8 @@
             </div>
             <div class="card-body">
                 <p class="card-text">Use as opções abaixo para gerenciar sua conta.</p>
-                
                 <div class="d-flex justify-content-between">
                     <a href="{{ url_for('users.conta') }}" class="btn btn-primary">Atualizar Conta</a>
-                    
                     <form action="{{ url_for('users.deletar_conta') }}" method="POST" onsubmit="return confirm('Você tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');">
                         <button type="submit" class="btn btn-danger">Excluir Minha Conta</button>
                     </form>

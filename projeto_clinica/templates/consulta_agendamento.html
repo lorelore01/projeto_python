@@ -9,7 +9,7 @@
             <div class="mb-3">
                 <label for="horario" class="form-label">Escolha um horário:</label>
                 <select name="horario" id="horario" class="form-select" required>
-                    <option value="" disabled selected>Selecione um horário</option> <!-- Placeholder -->
+                    <option value="" disabled selected>Selecione um horário</option>
                     {% for horario in horarios_disponiveis %}
                         <option value="{{ horario }}" {% if horario in horarios_ocupados %}disabled{% endif %}>
                             {{ horario }} {% if horario in horarios_ocupados %}(indisponível){% endif %}
@@ -20,7 +20,24 @@
             
             <div class="mb-3">
                 <label for="descricao" class="form-label">Descrição:</label>
-                <textarea name="descricao" id="descricao" class="form-control" placeholder="Insira a descrição do motivo da consulta" required></textarea> <!-- Placeholder -->
+                <textarea name="descricao" id="descricao" class="form-control" placeholder="Insira a descrição do motivo da consulta" required></textarea>
+            </div>
+
+            <!-- Exibe o preço original, o preço com desconto e a porcentagem de desconto -->
+            <div class="mb-3">
+                <strong>Preço original:</strong> R$ {{ preco_base | round(2) }}<br>
+                
+                {% if desconto_aplicado == 0 %}
+                    <strong>Nenhum desconto está sendo aplicado</strong><br>
+                {% elif desconto_aplicado == 5 %}
+                    <strong>Desconto aplicado:</strong> 5% (por pagamento à vista)<br>
+                {% elif desconto_aplicado == 15 %}
+                    <strong>Desconto aplicado:</strong> 15% (por convênio)<br>
+                {% elif desconto_aplicado == 20 %}
+                    <strong>Desconto aplicado:</strong> 5% (por pagamento à vista) + 15% (por convênio)<br>
+                {% endif %}
+                
+                <strong>Preço com desconto:</strong> R$ {{ preco_final | round(2) }}
             </div>
 
             <div class="text-center">
