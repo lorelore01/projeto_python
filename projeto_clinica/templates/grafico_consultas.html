@@ -6,25 +6,6 @@
     <div class="chart-container">
         <canvas id="consultasChart"></canvas>
     </div>
-
-    <script>
-        // Assuming 'contagem' is passed dynamically from Flask
-        var ctx = document.getElementById('consultasChart').getContext('2d');
-        var consultasChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
-                datasets: [{
-                    label: 'Consultas',
-                    data: {{ contagem | tojson }},
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        });
-    </script>
+    <img src="data:image/png;base64,{{ image_data }}" alt="Plot Image" />
+    
 {% endblock %}

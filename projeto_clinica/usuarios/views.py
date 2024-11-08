@@ -321,38 +321,3 @@ def confirmacao_agendamento():
 def acessar_medicos():
     medicos = Medico.query.all()  # Obtém todos os médicos do banco de dados
     return render_template('medicos.html', medicos=medicos)
-
-
-@usuarios.route('/graphics')
-@login_required  # Assuming you want this protected too
-def graphics_page():
-    # Step 1: Get the consultation counts
-    dados = get_consultation_counts()  # Call your function to get data from the database
-
-    # Step 2: Prepare the data for the graph
-    # Initialize data structures for counting
-    datas = []
-    contagem = []
-    
-    # Create a dictionary to map doctor names to their corresponding indices
-    doctor_names = ["Dra. Marina", "Dr. Ricardo", "Dra. Ana", "Dr. Jonatas", "Dra. Leandra"]
-    
-    # Initialize counts for each doctor
-    counts_per_doctor = {name: [0] * 5 for name in doctor_names}  # 5 days of the week
-
-    # Step 3: Process results to count consultations
-    for nome, dia_da_semana, total in dados:
-        # Map the weekday numbers (0=Sunday, 6=Saturday) to your array indices (0=Monday, 4=Friday)
-        if nome in counts_per_doctor:
-            counts_per_doctor[nome][int(dia_da_semana)] += total
-
-    # Flatten the counts into the right format
-    for doctor in doctor_names:
-        datas.append(doctor)  # Add the doctor's name
-        contagem.extend(counts_per_doctor[doctor])  # Add their counts for the week
-
-    # Step 4: Generate the plot using the consultation counts
-    dz = [total for counts in counts_per_doctor.values() for total in counts]  # Flatten counts for plotting
-    plot_consultas(dz)  # Call your plotting function
-
-    return render_template('grafico_consultas.html', datas=datas, contagem=contagem)
