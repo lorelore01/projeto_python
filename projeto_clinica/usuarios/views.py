@@ -75,7 +75,7 @@ def send_email(user_email, nome_paciente, data_consulta, horario_consulta, nome_
     <p> Horário: {horario_consulta} </p>
     <p> Médico: Dr(a). {nome_medico} </p>
     <p> Atenciosamente, </p>
-    <p> Clínica UEPB </p>
+    <p> Clínica Cuidado Integral</p>
     """
 
     msg = EmailMessage()
