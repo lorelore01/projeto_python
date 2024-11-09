@@ -10,9 +10,10 @@
         <form method="POST" class="mx-auto" style="max-width: 600px;">
             {{ form.hidden_tag() }}
             
+            <!-- Nome -->
             <div class="form-group mb-3">
                 {{ form.nome.label(class="form-label") }} 
-                {{ form.nome(class="form-control", placeholder="Digite o nome") }}
+                {{ form.nome(class="form-control {{ 'is-invalid' if form.nome.errors else '' }}", placeholder="Digite o nome") }}
                 {% if form.nome.errors %}
                     <div class="text-danger mt-1">
                         {% for error in form.nome.errors %}
@@ -22,9 +23,10 @@
                 {% endif %}
             </div>
 
+            <!-- Idade -->
             <div class="form-group mb-3">
                 {{ form.idade.label(class="form-label") }} 
-                {{ form.idade(class="form-control", placeholder="Digite a idade") }}
+                {{ form.idade(class="form-control {{ 'is-invalid' if form.idade.errors else '' }}", placeholder="Digite a idade") }}
                 {% if form.idade.errors %}
                     <div class="text-danger mt-1">
                         {% for error in form.idade.errors %}
@@ -34,9 +36,10 @@
                 {% endif %}
             </div>
 
+            <!-- CPF -->
             <div class="form-group mb-3">
                 {{ form.cpf.label(class="form-label") }} 
-                {{ form.cpf(class="form-control", placeholder="000.000.000-00") }}
+                {{ form.cpf(class="form-control {{ 'is-invalid' if form.cpf.errors else '' }}", id="cpf", placeholder="000.000.000-00") }}
                 {% if form.cpf.errors %}
                     <div class="text-danger mt-1">
                         {% for error in form.cpf.errors %}
@@ -46,9 +49,10 @@
                 {% endif %}
             </div>
 
+            <!-- Convênio -->
             <div class="form-group mb-3">
                 {{ form.convenio.label(class="form-label") }} 
-                {{ form.convenio(class="form-control") }}
+                {{ form.convenio(class="form-control {{ 'is-invalid' if form.convenio.errors else '' }}") }}
                 {% if form.convenio.errors %}
                     <div class="text-danger mt-1">
                         {% for error in form.convenio.errors %}
@@ -58,9 +62,10 @@
                 {% endif %}
             </div>
 
+            <!-- Email -->
             <div class="form-group mb-3">
                 {{ form.email.label(class="form-label") }} 
-                {{ form.email(class="form-control", placeholder="seuemail@gmail.com") }}
+                {{ form.email(class="form-control {{ 'is-invalid' if form.email.errors else '' }}", placeholder="seuemail@gmail.com") }}
                 {% if form.email.errors %}
                     <div class="text-danger mt-1">
                         {% for error in form.email.errors %}
@@ -70,9 +75,10 @@
                 {% endif %}
             </div>
 
+            <!-- Pagamento -->
             <div class="form-group mb-3">
                 {{ form.pagamento.label(class="form-label") }} 
-                {{ form.pagamento(class="form-control") }}
+                {{ form.pagamento(class="form-control {{ 'is-invalid' if form.pagamento.errors else '' }}") }}
                 {% if form.pagamento.errors %}
                     <div class="text-danger mt-1">
                         {% for error in form.pagamento.errors %}
@@ -82,9 +88,10 @@
                 {% endif %}
             </div>
 
+            <!-- Senha -->
             <div class="form-group mb-3">
                 {{ form.password.label(class="form-label") }} 
-                {{ form.password(class="form-control", placeholder="Digite sua senha") }}
+                {{ form.password(class="form-control {{ 'is-invalid' if form.password.errors else '' }}", placeholder="Digite sua senha") }}
                 {% if form.password.errors %}
                     <div class="text-danger mt-1">
                         {% for error in form.password.errors %}
@@ -94,9 +101,10 @@
                 {% endif %}
             </div>
 
+            <!-- Confirmar Senha -->
             <div class="form-group mb-3">
                 {{ form.pass_confirm.label(class="form-label") }} 
-                {{ form.pass_confirm(class="form-control", placeholder="Confirme sua senha") }}
+                {{ form.pass_confirm(class="form-control {{ 'is-invalid' if form.pass_confirm.errors else '' }}", placeholder="Confirme sua senha") }}
                 {% if form.pass_confirm.errors %}
                     <div class="text-danger mt-1">
                         {% for error in form.pass_confirm.errors %}
@@ -106,9 +114,26 @@
                 {% endif %}
             </div>
 
+            <!-- Submit Button -->
             <div class="form-group text-center">
                 {{ form.submit(class="btn btn-primary", value="Cadastrar Paciente") }}
             </div>
         </form>
     </div>
+
+    <!-- CPF Auto-formatting Script -->
+    <script>
+        document.getElementById('cpf').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
+            if (value.length <= 3) {
+                e.target.value = value;
+            } else if (value.length <= 6) {
+                e.target.value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+            } else if (value.length <= 9) {
+                e.target.value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+            } else {
+                e.target.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+            }
+        });
+    </script>
 {% endblock %}

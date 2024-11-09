@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Gráfico de Consultas por Dia da Semana</h1>
-
-    <div class="chart-container">
-        <canvas id="consultasChart"></canvas>
-    </div>
-    <img src="data:image/png;base64,{{ image_data }}" alt="Plot Image" />
+    <h1>Gráfico 3D de Consultas por Médico e Dia da Semana</h1>
     
+    <div class="chart-container" style="width: 100%; display: flex; justify-content: center; margin-top: 30px;">
+        <img src="data:image/png;base64,{{ image_data }}" alt="Gráfico de Consultas" style="max-width: 100%; height: auto;" />
+    </div>
+
+    <p style="text-align: center; font-size: 16px; margin-top: 20px;">
+        Este gráfico exibe o número de consultas realizadas por cada médico, distribuído por dia da semana.
+    </p>
 {% endblock %}
