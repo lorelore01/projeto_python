@@ -7,7 +7,6 @@ from projeto_clinica.usuarios.forms import RegistrationForm, LoginForm, UpdateUs
 from datetime import datetime
 from datetime import timedelta
 from werkzeug.security import generate_password_hash
-from projeto_clinica.graph import plot_consultas, contar_consultas_por_semana, get_consultation_counts
 from email.message import EmailMessage
 import smtplib
 
@@ -137,13 +136,6 @@ def conta():
 def logout():
     logout_user()
     return redirect(url_for("core.index"))
-
-usuarios.route('/<usuario>')
-def user_posts(usuario):
-    page = request.args.get('page', 1, type=int)
-    usuario = Paciente.query.filter_by(usuario=usuario).first_or_404()
-    email = Paciente.query.filter_by(email=email).first_or_404()
-    return render_template('pagina_usuario', usuario = usuario, email = email )
 
 
 @usuarios.route('/pagina_usuario')
